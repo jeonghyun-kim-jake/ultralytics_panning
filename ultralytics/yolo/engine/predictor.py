@@ -85,7 +85,13 @@ class BasePredictor:
         self.args = get_cfg(cfg, overrides)
         project = self.args.project or Path(SETTINGS['runs_dir']) / self.args.task
         name = self.args.name or f'{self.args.mode}'
-        self.save_dir = increment_path(Path(project) / name, exist_ok=self.args.exist_ok)
+        # jh20a.kim - support save_dir with parameter
+           
+        self.save_dir = Path(self.args.save_dir) if self.args.save_dir is not None \
+          else increment_path(Path(project) / name, exist_ok=self.args.exist_ok)
+            
+        print("save_dir is configured as ", self.save_dir)
+        
         if self.args.conf is None:
             self.args.conf = 0.25  # default conf=0.25
         self.done_warmup = False
