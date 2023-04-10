@@ -29,6 +29,12 @@ TASK_MAP = {
     'pose': [PoseModel, yolo.v8.pose.PoseTrainer, yolo.v8.pose.PoseValidator, yolo.v8.pose.PosePredictor]}
 
 
+def createPath(path=None):
+    if path is not None:
+        return Path(path)
+    return None
+
+
 class YOLO:
     """
     YOLO (You Only Look Once) object detection model.
@@ -277,7 +283,7 @@ class YOLO:
             args.imgsz = self.model.args['imgsz']  # use trained imgsz unless custom value is passed
         args.imgsz = check_imgsz(args.imgsz, max_dim=1)
 
-        validator = TASK_MAP[self.task][2](args=args, _callbacks=self.callbacks)
+        validator = TASK_MAP[self.task][2](args=args, save_dir=createPath(overrides['save_dir']), _callbacks=self.callbacks)
         validator(model=self.model)
         self.metrics = validator.metrics
 
